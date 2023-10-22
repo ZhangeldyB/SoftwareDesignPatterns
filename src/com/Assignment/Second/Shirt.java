@@ -4,6 +4,7 @@ public abstract class Shirt {
     String description;
     int price;
 
+
     public String getDescription() {
         return description;
     }
