@@ -1,5 +1,7 @@
 package com.ZhandySound.Strategy;
 
+import com.ZhandySound.Factory.IContent;
+
 public interface IStrategy {
-    void action(String name);
+    IContent action(String name);
 }

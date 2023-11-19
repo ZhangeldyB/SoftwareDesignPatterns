@@ -9,10 +9,13 @@ public class AudioBook implements IContent {
     private String author;
     private List<String> chapters;
 
-    public AudioBook(String name, String author, List<String> chapters) {
+    private int serviceLevel;
+
+    public AudioBook(String name, String author, List<String> chapters, int serviceLevel) {
         this.name = name;
         this.author = author;
         this.chapters = chapters;
+        this.serviceLevel = serviceLevel;
     }
     @Override
     public void play() {
@@ -24,5 +27,20 @@ public class AudioBook implements IContent {
     public void playChapter(String chapter) {
         System.out.printf("Playing the chapter \"%s\" from %s by %s \n", chapter, name, author );
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public List<String> getChapters() {
+        return chapters;
+    }
+
+    public int getServiceLevel() {
+        return serviceLevel;
+    }
 }

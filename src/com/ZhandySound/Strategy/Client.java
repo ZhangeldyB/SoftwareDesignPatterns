@@ -1,15 +1,56 @@
 package com.ZhandySound.Strategy;
 
-public class Client {
-    IStrategy user;
-    private String name;
+import com.ZhandySound.Decorator.BasicAccessDecorator;
+import com.ZhandySound.Decorator.IAccessLevelDecorator;
+import com.ZhandySound.Factory.IContent;
 
-    public Client(IStrategy user, String name) {
-        this.user = user;
+import java.sql.SQLException;
+
+public class Client {
+    private IAccessLevelDecorator user;
+    private String name;
+    private String password;
+    private int accessLevel;
+
+    public Client(IStrategy strategy, String name, String password) {
+        this.user = new BasicAccessDecorator(strategy);
         this.name = name;
+        this.password = password;
     }
 
-    void action(){
-        user.action(name);
+    public IContent action(){
+        return user.action(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void listenToContent() throws SQLException {
+        System.out.println(accessLevel);
+        accessLevel = user.decorateAccessLevel(accessLevel);
+
+        IStrategy originalStrategy = user;
+        while (originalStrategy instanceof IAccessLevelDecorator) {
+            originalStrategy = ((IAccessLevelDecorator) originalStrategy).getOriginalStrategy();
+        }
+
+        if (originalStrategy instanceof Listener) {
+            ((Listener) originalStrategy).listenToContent(accessLevel);
+        } else {
+            System.out.println("This user cannot listen to music.");
+        }
     }
 }

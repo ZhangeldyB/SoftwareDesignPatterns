@@ -11,6 +11,8 @@ public class SongFactory extends Factory {
     public IContent createContent(String authorName){
         System.out.println("Enter the name of the song:");
         name = sc.nextLine();
-        return new Song(name, authorName);
+        System.out.println("Enter the service level (1. basic, 2. premium, 3. ultra):");
+        serviceLevel = Integer.parseInt(sc.nextLine());
+        return new Song(name, authorName, serviceLevel);
     }
 }
