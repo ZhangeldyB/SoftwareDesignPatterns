@@ -129,7 +129,7 @@ public class DBFunctions {
                 System.out.printf("Listening to the '%s' by %s \n", resultSet.getString("audioBookName"), resultSet.getString("author"));
                 String[] chapters = resultSet.getString("chapters").split(", ");
                 for (int i = 0; i < chapters.length; i++) {
-                    System.out.printf("Chapter %d: %s", i+1 , chapters[i]);
+                    System.out.printf("Chapters: %s", i+1);
                     if (i < chapters.length - 1) {
                         System.out.print(", ");
                     }

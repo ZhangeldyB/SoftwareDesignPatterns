@@ -1,5 +1,9 @@
 package com.ZhandySound;
 
+import com.ZhandySound.Adapter.DollarPayment;
+import com.ZhandySound.Adapter.DollarToTengeAdapter;
+import com.ZhandySound.Adapter.PaymentMachine;
+import com.ZhandySound.Adapter.TengePayment;
 import com.ZhandySound.Decorator.IAccessLevelDecorator;
 import com.ZhandySound.Decorator.PremiumAccessDecorator;
 import com.ZhandySound.Decorator.UltraAccessDecorator;
@@ -13,6 +17,7 @@ public class ZhandySound {
         DBFunctions dbf = new DBFunctions();
         Scanner sc = new Scanner(System.in);
         Client client = null;
+        PaymentMachine paymentMachine = new PaymentMachine();
         int option;
         outerloop:
         while (true){
@@ -138,7 +143,7 @@ public class ZhandySound {
                         }
                     }else {
                         System.out.println("1. Start Listening");
-                        System.out.println("2. Upgrade Access Level");
+                        System.out.println("2. Upgrade Access Level for 500 tenge");
                         System.out.println("3. Log out");
                         option = Integer.parseInt(sc.nextLine());
                         switch (option){
@@ -151,14 +156,56 @@ public class ZhandySound {
                                     System.out.println("You already have maximum access level");
                                 } else if (clientAL == 2) {
                                     System.out.println("Your access level upgrading to ultra");
-                                    IAccessLevelDecorator ultraListener = new UltraAccessDecorator(new Listener(dbf));
-                                    client = new Client(ultraListener, client.getName(), client.getPassword());
-                                    dbf.setAccessLevel(client, 3);
+                                    System.out.println("Select the payment currency");
+                                    System.out.println("1. KZT - Tenge");
+                                    System.out.println("2. USD - Dollars");
+                                    int currencyOption = Integer.parseInt(sc.nextLine());
+                                    System.out.println("Enter the payment amount:");
+                                    int payment = Integer.parseInt(sc.nextLine());
+                                    boolean paymentStatus = false;
+                                    if (currencyOption == 1) {
+                                        TengePayment tengePayment = new TengePayment(payment);
+                                        paymentStatus = paymentMachine.pay(tengePayment);
+                                    }else {
+                                        DollarPayment dollarPayment = new DollarPayment(payment);
+                                        DollarToTengeAdapter dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        paymentStatus = paymentMachine.pay(dollarToTengePayment);
+                                    }
+                                    if (paymentStatus){
+                                        IAccessLevelDecorator ultraListener = new UltraAccessDecorator(new Listener(dbf));
+                                        client = new Client(ultraListener, client.getName(), client.getPassword());
+                                        dbf.setAccessLevel(client, 3);
+                                        System.out.println("Upgraded!");
+                                    }else {
+                                        System.out.println("Error!");
+                                        break;
+                                    }
                                 }else {
                                     System.out.println("Your access level upgrading to premium");
-                                    IAccessLevelDecorator premiumListener = new PremiumAccessDecorator(new Listener(dbf));
-                                    client = new Client(premiumListener, client.getName(), client.getPassword());
-                                    dbf.setAccessLevel(client, 2);
+                                    System.out.println("Select the payment currency");
+                                    System.out.println("1. KZT - Tenge");
+                                    System.out.println("2. USD - Dollars");
+                                    int currencyOption = Integer.parseInt(sc.nextLine());
+                                    System.out.println("Enter the payment amount:");
+                                    int payment = Integer.parseInt(sc.nextLine());
+                                    boolean paymentStatus = false;
+                                    if (currencyOption == 1) {
+                                        TengePayment tengePayment = new TengePayment(payment);
+                                        paymentStatus = paymentMachine.pay(tengePayment);
+                                    }else {
+                                        DollarPayment dollarPayment = new DollarPayment(payment);
+                                        DollarToTengeAdapter dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        paymentStatus = paymentMachine.pay(dollarToTengePayment);
+                                    }
+                                    if (paymentStatus){
+                                        IAccessLevelDecorator premiumListener = new PremiumAccessDecorator(new Listener(dbf));
+                                        client = new Client(premiumListener, client.getName(), client.getPassword());
+                                        dbf.setAccessLevel(client, 2);
+                                        System.out.println("Upgraded!");
+                                    }else {
+                                        System.out.println("Error!");
+                                        break;
+                                    }
                                 }
                                 break;
                             case 3:
