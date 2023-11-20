@@ -4,7 +4,6 @@ import com.ZhandySound.Factory.Contents.Song;
 import com.ZhandySound.Factory.Factory;
 import com.ZhandySound.Factory.IContent;
 
-import java.util.Scanner;
 
 public class SongFactory extends Factory {
     @Override

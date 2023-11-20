@@ -39,7 +39,6 @@ public class Client {
     }
 
     public void listenToContent() throws SQLException {
-        System.out.println(accessLevel);
         accessLevel = user.decorateAccessLevel(accessLevel);
 
         IStrategy originalStrategy = user;

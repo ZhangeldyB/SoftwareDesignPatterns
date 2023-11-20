@@ -8,10 +8,6 @@ public class DollarPayment {
         this.money = money;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
     public int getMoney() {
         return money;
     }

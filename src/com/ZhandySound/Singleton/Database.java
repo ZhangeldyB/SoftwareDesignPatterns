@@ -15,7 +15,6 @@ public class Database {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e);
             e.printStackTrace();
         }
     }
@@ -23,7 +22,7 @@ public class Database {
         if (instance == null){
             instance = new Database();
         }
-        return new Database();
+        return instance;
     }
     public Connection getConnection() {
         return connection;

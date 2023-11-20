@@ -17,16 +17,6 @@ public class AudioBook implements IContent {
         this.chapters = chapters;
         this.serviceLevel = serviceLevel;
     }
-    @Override
-    public void play() {
-        for (String chapter:
-             chapters) {
-            playChapter(chapter);
-        }
-    }
-    public void playChapter(String chapter) {
-        System.out.printf("Playing the chapter \"%s\" from %s by %s \n", chapter, name, author );
-    }
 
     public String getName() {
         return name;

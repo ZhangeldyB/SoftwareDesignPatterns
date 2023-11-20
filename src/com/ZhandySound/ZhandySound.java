@@ -18,8 +18,11 @@ public class ZhandySound {
         Scanner sc = new Scanner(System.in);
         Client client = null;
         PaymentMachine paymentMachine = new PaymentMachine();
+        TengePayment tengePayment;
+        DollarPayment dollarPayment;
+        DollarToTengeAdapter dollarToTengePayment;
         int option;
-        outerloop:
+        outerLoop:
         while (true){
             System.out.println("1. Sign in");
             System.out.println("2. Sign up");
@@ -106,7 +109,7 @@ public class ZhandySound {
                     }
                     break;
                 case 3:
-                    break outerloop;
+                    break outerLoop;
             }
             if (status){
                 secondOuter:
@@ -162,20 +165,22 @@ public class ZhandySound {
                                     int currencyOption = Integer.parseInt(sc.nextLine());
                                     System.out.println("Enter the payment amount:");
                                     int payment = Integer.parseInt(sc.nextLine());
-                                    boolean paymentStatus = false;
+                                    boolean paymentStatus;
                                     if (currencyOption == 1) {
-                                        TengePayment tengePayment = new TengePayment(payment);
+                                        tengePayment = new TengePayment(payment);
+                                        paymentMachine.addPaymentStatusObserver(tengePayment);
                                         paymentStatus = paymentMachine.pay(tengePayment);
                                     }else {
-                                        DollarPayment dollarPayment = new DollarPayment(payment);
-                                        DollarToTengeAdapter dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        dollarPayment = new DollarPayment(payment);
+                                        dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        paymentMachine.addPaymentStatusObserver(dollarToTengePayment);
                                         paymentStatus = paymentMachine.pay(dollarToTengePayment);
                                     }
                                     if (paymentStatus){
                                         IAccessLevelDecorator ultraListener = new UltraAccessDecorator(new Listener(dbf));
                                         client = new Client(ultraListener, client.getName(), client.getPassword());
                                         dbf.setAccessLevel(client, 3);
-                                        System.out.println("Upgraded!");
+                                        System.out.println("Access level is upgraded!");
                                     }else {
                                         System.out.println("Error!");
                                         break;
@@ -188,20 +193,22 @@ public class ZhandySound {
                                     int currencyOption = Integer.parseInt(sc.nextLine());
                                     System.out.println("Enter the payment amount:");
                                     int payment = Integer.parseInt(sc.nextLine());
-                                    boolean paymentStatus = false;
+                                    boolean paymentStatus;
                                     if (currencyOption == 1) {
-                                        TengePayment tengePayment = new TengePayment(payment);
+                                        tengePayment = new TengePayment(payment);
+                                        paymentMachine.addPaymentStatusObserver(tengePayment);
                                         paymentStatus = paymentMachine.pay(tengePayment);
                                     }else {
-                                        DollarPayment dollarPayment = new DollarPayment(payment);
-                                        DollarToTengeAdapter dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        dollarPayment = new DollarPayment(payment);
+                                        dollarToTengePayment = new DollarToTengeAdapter(payment, dollarPayment);
+                                        paymentMachine.addPaymentStatusObserver(dollarToTengePayment);
                                         paymentStatus = paymentMachine.pay(dollarToTengePayment);
                                     }
                                     if (paymentStatus){
                                         IAccessLevelDecorator premiumListener = new PremiumAccessDecorator(new Listener(dbf));
                                         client = new Client(premiumListener, client.getName(), client.getPassword());
                                         dbf.setAccessLevel(client, 2);
-                                        System.out.println("Upgraded!");
+                                        System.out.println("Access level is upgraded!");
                                     }else {
                                         System.out.println("Error!");
                                         break;

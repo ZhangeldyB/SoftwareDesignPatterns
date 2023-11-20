@@ -1,6 +1,8 @@
 package com.ZhandySound.Adapter;
 
-public class DollarToTengeAdapter extends TengePayment{
+import com.ZhandySound.Observer.IPaymentStatusObserver;
+
+public class DollarToTengeAdapter extends TengePayment implements IPaymentStatusObserver {
     private DollarPayment dollarPayment;
 
     public DollarToTengeAdapter(int money, DollarPayment dollarPayment) {
@@ -16,5 +18,10 @@ public class DollarToTengeAdapter extends TengePayment{
     @Override
     public int getMoney() {
         return dollarPayment.getMoney() * 460;
+    }
+
+    @Override
+    public void updatePaymentStatus(boolean paymentStatus) {
+        System.out.println("Payment status for Dollars currency: " + (paymentStatus ? "Success" : "Failed"));
     }
 }

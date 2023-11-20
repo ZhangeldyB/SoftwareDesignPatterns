@@ -16,11 +16,6 @@ public class Song implements IContent {
     }
 
     @Override
-    public void play() {
-        System.out.printf("Playing the song %s by %s \n", name, author );
-    }
-
-    @Override
     public List<String> getChapters() {
         return null;
     }

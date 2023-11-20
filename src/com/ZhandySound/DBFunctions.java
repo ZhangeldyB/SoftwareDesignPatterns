@@ -13,7 +13,7 @@ public class DBFunctions {
     private Database db = Database.getInstance();
     private Connection conn = db.getConnection();
 
-    void addClient(Client client, String type) throws SQLException {
+    void addClient(Client client, String type) {
         try{
             Statement query = conn.createStatement();
             query.executeUpdate("INSERT INTO public.\"" + type + "\" (name, password) VALUES ('" + client.getName() + "','" + client.getPassword() +"')");
@@ -22,7 +22,7 @@ public class DBFunctions {
             e.printStackTrace();
         }
     }
-    boolean checkClient(Client client, String type) throws SQLException{
+    boolean checkClient(Client client, String type) {
         try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM \"" + type + "\" WHERE name = '" + client.getName() + "' AND password = '" + client.getPassword() + "';");
@@ -36,7 +36,7 @@ public class DBFunctions {
         return false;
     }
 
-    void addAudioBook (IContent audioBook) throws SQLException{
+    void addAudioBook (IContent audioBook) {
         try {
             Statement statement = conn.createStatement();
             String chaptersString = "{" + String.join(", ", audioBook.getChapters()) + "}";
@@ -48,7 +48,7 @@ public class DBFunctions {
         }
     }
 
-    void addSong(IContent song) throws SQLException{
+    void addSong(IContent song) {
         try {
             Statement statement = conn.createStatement();
             String query = String.format("INSERT INTO public.\"Songs\" (\"songName\", author, \"serviceLevel\") VALUES ('%s', '%s', '%s')", song.getName(), song.getAuthor(), song.getServiceLevel());
@@ -59,7 +59,7 @@ public class DBFunctions {
         }
     }
 
-    void showSong(String authorName) throws SQLException{
+    void showSong(String authorName) {
         try {
             String query = String.format("SELECT * FROM public.\"Songs\" WHERE author = '%s'", authorName);
             Statement statement = conn.createStatement();
@@ -80,7 +80,7 @@ public class DBFunctions {
         }
     }
 
-    void showAudioBook(String authorName) throws SQLException{
+    void showAudioBook(String authorName) {
         try {
             String query = String.format("SELECT * FROM public.\"AudioBooks\" WHERE author = '%s'", authorName);
             Statement statement = conn.createStatement();
@@ -108,7 +108,7 @@ public class DBFunctions {
         }
     }
 
-    public void listenToMusic(int accessLevel, String songName) throws SQLException{
+    public void listenToMusic(int accessLevel, String songName) {
         try {
             Statement statement = conn.createStatement();
             String query = String.format( "SELECT * FROM public.\"Songs\" WHERE \"songName\" = '%s' AND \"serviceLevel\" <= %d", songName, accessLevel);
@@ -120,18 +120,19 @@ public class DBFunctions {
         }
     }
 
-    public void listenToAudioBook(int accessLevel, String audioBookName) throws SQLException{
+    public void listenToAudioBook(int accessLevel, String audioBookName) {
         try {
             Statement statement = conn.createStatement();
             String query = String.format("SELECT * FROM public.\"AudioBooks\" WHERE \"audioBookName\" = '%s' AND \"serviceLevel\" <= %d", audioBookName, accessLevel);
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()){
                 System.out.printf("Listening to the '%s' by %s \n", resultSet.getString("audioBookName"), resultSet.getString("author"));
-                String[] chapters = resultSet.getString("chapters").split(", ");
+                String[] chapters = resultSet.getString("chapters").split(",");
                 for (int i = 0; i < chapters.length; i++) {
-                    System.out.printf("Chapters: %s", i+1);
+                    String cleanedChapter = chapters[i].trim().replaceAll("[{}]", "");
+                    System.out.printf("Chapter %d: %s", i + 1, cleanedChapter);
                     if (i < chapters.length - 1) {
-                        System.out.print(", ");
+                        System.out.print("\n");
                     }
                 }
                 System.out.println();
